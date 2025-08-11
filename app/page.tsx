@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
+import RecipeManager from "./components/RecipeManager";
 
 // Basic multi-stopwatch manager for a single Next.js page (App Router)
 // - Create/Delete stopwatches
@@ -40,6 +41,7 @@ export default function Page() {
   // "tick" just forces a re-render so the displayed time updates.
   const [tick, setTick] = useState(0);
   const intervalRef = useRef<number | null>(null);
+  const [showRecipes, setShowRecipes] = useState(false);
 
   // Load from localStorage on first mount
   useEffect(() => {
@@ -152,16 +154,36 @@ export default function Page() {
     <main className="container">
       <header className="top">
         <h1>Stopwatch Manager</h1>
-        <button className="primary" onClick={addStopwatch} aria-label="Add a stopwatch">
-          Add Stopwatch
-        </button>
+        <div className="header-actions">
+          <div className="tabs">
+            <button 
+              className={`tab ${!showRecipes ? 'active' : ''}`}
+              onClick={() => setShowRecipes(false)}
+            >
+              Stopwatches
+            </button>
+            <button 
+              className={`tab ${showRecipes ? 'active' : ''}`}
+              onClick={() => setShowRecipes(true)}
+            >
+              Recipes
+            </button>
+          </div>
+          {!showRecipes && (
+            <button className="primary" onClick={addStopwatch} aria-label="Add a stopwatch">
+              Add Stopwatch
+            </button>
+          )}
+        </div>
       </header>
 
-      <p className="hint">
-        Create, label, and control multiple stopwatches.
-      </p>
+      {!showRecipes ? (
+        <>
+          <p className="hint">
+            Create, label, and control multiple stopwatches.
+          </p>
 
-      <section className="grid">
+          <section className="grid">
         {stopwatches.map((sw) => (
           <article key={sw.id} className={`card ${sw.isRunning ? "running" : ""}`}>
             <input
@@ -210,12 +232,21 @@ export default function Page() {
             </div>
           </article>
         ))}
-      </section>
+          </section>
+        </>
+      ) : (
+        <RecipeManager />
+      )}
 
       <style jsx>{`
         .container { max-width: 960px; margin: 0 auto; padding: 24px; font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; }
         .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
         h1 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.02em; }
+        .header-actions { display: flex; align-items: center; gap: 16px; }
+        .tabs { display: flex; gap: 4px; background: #f3f4f6; padding: 4px; border-radius: 12px; }
+        .tab { appearance: none; border: none; background: transparent; padding: 8px 16px; font-weight: 600; cursor: pointer; border-radius: 8px; transition: all 0.2s; }
+        .tab:hover { background: rgba(0,0,0,0.05); }
+        .tab.active { background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
         .hint { color: #6b7280; margin: 0 0 18px; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
         .card { background: #fff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 14px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
@@ -236,6 +267,9 @@ export default function Page() {
           .card { background: #111214; border-color: #26272b; }
           .name { background: #0b0b0c; border-color: #26272b; color: #e5e7eb; }
           .hint { color: #9ca3af; }
+          .tabs { background: #1a1b1e; }
+          .tab:hover { background: rgba(255,255,255,0.05); }
+          .tab.active { background: #26272b; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
           button { border-color: #26272b; background: #1a1b1e; color: #e5e7eb; }
           button:hover { background: #232428; }
           button.primary { background: #e5e7eb; color: #111827; border-color: #e5e7eb; }
