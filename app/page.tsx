@@ -166,14 +166,14 @@ export default function Page() {
       ) : (
         <>
           <header className="top">
-            <h1>Stopwatch Manager</h1>
+            <h1>Kitchen Timer Pro</h1>
             <button className="primary" onClick={addStopwatch} aria-label="Add a stopwatch">
               Add Stopwatch
             </button>
           </header>
 
           <p className="hint">
-            Create, label, and control multiple stopwatches.
+            Set multiple timers for all your cooking tasks while following your favorite recipes.
           </p>
 
           <RecipeViewer onManageRecipes={() => setShowRecipeManager(true)} />
