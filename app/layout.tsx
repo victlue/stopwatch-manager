@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Stopwatch Manager",
-  description: "Manage multiple stopwatches",
+  title: "Kitchen Timer Pro",
+  description: "Time your cooking with multiple timers and recipe viewer",
 };
 
 export default function RootLayout({

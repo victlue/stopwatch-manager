@@ -1,5 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
+import RecipeManager from "./components/RecipeManager";
+import RecipeViewer from "./components/RecipeViewer";
 
 // Basic multi-stopwatch manager for a single Next.js page (App Router)
 // - Create/Delete stopwatches
@@ -40,6 +42,7 @@ export default function Page() {
   // "tick" just forces a re-render so the displayed time updates.
   const [tick, setTick] = useState(0);
   const intervalRef = useRef<number | null>(null);
+  const [showRecipeManager, setShowRecipeManager] = useState(false);
 
   // Load from localStorage on first mount
   useEffect(() => {
@@ -150,18 +153,32 @@ export default function Page() {
 
   return (
     <main className="container">
-      <header className="top">
-        <h1>Stopwatch Manager</h1>
-        <button className="primary" onClick={addStopwatch} aria-label="Add a stopwatch">
-          Add Stopwatch
-        </button>
-      </header>
+      {showRecipeManager ? (
+        <>
+          <header className="top">
+            <h1>Recipe Manager</h1>
+            <button onClick={() => setShowRecipeManager(false)}>
+              Back to Stopwatches
+            </button>
+          </header>
+          <RecipeManager />
+        </>
+      ) : (
+        <>
+          <header className="top">
+            <h1>Kitchen Timer Pro</h1>
+            <button className="primary" onClick={addStopwatch} aria-label="Add a stopwatch">
+              Add Stopwatch
+            </button>
+          </header>
 
-      <p className="hint">
-        Create, label, and control multiple stopwatches.
-      </p>
+          <p className="hint">
+            Set multiple timers for all your cooking tasks while following your favorite recipes.
+          </p>
 
-      <section className="grid">
+          <RecipeViewer onManageRecipes={() => setShowRecipeManager(true)} />
+
+          <section className="grid">
         {stopwatches.map((sw) => (
           <article key={sw.id} className={`card ${sw.isRunning ? "running" : ""}`}>
             <input
@@ -210,7 +227,9 @@ export default function Page() {
             </div>
           </article>
         ))}
-      </section>
+          </section>
+        </>
+      )}
 
       <style jsx>{`
         .container { max-width: 960px; margin: 0 auto; padding: 24px; font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif; }
