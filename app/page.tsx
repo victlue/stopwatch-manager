@@ -166,7 +166,7 @@ export default function Page() {
       ) : (
         <>
           <header className="top">
-            <h1>Kitchen Timer Pro</h1>
+            <h1>Kitchen Timer</h1>
             <button className="primary" onClick={addStopwatch} aria-label="Add a stopwatch">
               Add Stopwatch
             </button>
